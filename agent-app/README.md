@@ -61,4 +61,4 @@ lib/
 - CSS-file-only changes aren't detected (only the fetched HTML document is inspected, not linked stylesheets). Inline style/markup changes are.
 - No headless rendering — JS-rendered content isn't seen.
 - Redirects are capped at 5 hops; deeper chains fail with a clear error rather than looping forever.
-- Deployed on Vercel: if the target page is also a Vercel deployment with "Vercel Authentication" (SSO) turned on, the agent's server-side fetch will hit the login redirect instead of the page. Turn that off in the target project's Deployment Protection settings for the agent to reach it.
+- Deployed on Vercel: this account has "Vercel Authentication" on by default, which blocks the team-scoped deployment URL (`<project>-<team>.vercel.app`) behind a login redirect. The short assigned URL (`<project>.vercel.app`) isn't affected — that's the one to use, both for viewing the app and as the URL you feed it.

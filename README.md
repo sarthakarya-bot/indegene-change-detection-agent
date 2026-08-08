@@ -10,8 +10,10 @@ Indegene Associate PM (Applied AI) hiring assignment.
 
 ## Live demo
 
-- Target page: https://lumeno-target-page-sarthak-aryas-projects-e288fd0e.vercel.app
-- Agent app: https://change-detection-agent-sarthak-aryas-projects-e288fd0e.vercel.app
+- Target page: https://lumeno-target-page.vercel.app
+- Agent app: https://change-detection-agent-eight.vercel.app *(use this exact short form — see note below)*
+
+> Vercel assigns each project both a short URL (`<project>.vercel.app`) and a longer team-scoped one (`<project>-<team>.vercel.app`). This account has "Vercel Authentication" on by default, which blocks the team-scoped URLs behind a login redirect — use the short form above, which is unaffected.
 
 ## Quick local run
 
