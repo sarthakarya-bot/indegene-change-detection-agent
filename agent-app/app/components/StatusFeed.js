@@ -13,11 +13,14 @@ export default function StatusFeed({ events, running }) {
         Live status
       </div>
       {recent.length === 0 && <div className="feed-empty">Idle — enter a URL and hit Run.</div>}
-      {recent.map((e, i) => (
-        <div className="feed-line" key={i}>
-          &gt; {e.message}
-        </div>
-      ))}
+      {recent.map((e, i) => {
+        const isCurrent = running && i === recent.length - 1;
+        return (
+          <div className={`feed-line ${isCurrent ? "feed-line-current" : ""}`} key={i}>
+            &gt; {e.message}
+          </div>
+        );
+      })}
     </div>
   );
 }

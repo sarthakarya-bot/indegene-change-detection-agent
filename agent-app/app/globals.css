@@ -87,7 +87,17 @@ body {
 .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: #3ddc84; animation: pulse 1.2s infinite; }
 .pulse-dot.idle { background: var(--console-dim); animation: none; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
-.feed-line { padding: 3px 0; white-space: pre-wrap; word-break: break-word; }
+.feed-line { padding: 3px 0; white-space: pre-wrap; word-break: break-word; opacity: 0.55; transition: opacity 0.2s ease; }
+.feed-line-current {
+  opacity: 1;
+  color: #3ddc84;
+  font-weight: 600;
+  animation: feed-line-in 0.25s ease;
+}
+@keyframes feed-line-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .feed-empty { color: var(--console-dim); }
 
 /* Structured report */
