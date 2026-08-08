@@ -1,92 +1,79 @@
-# Video script — Change Detection Agent (target: 4:30-5:00)
+# Video script — Change Detection Agent (target: 3 min, hard cap 4 min)
 
-Record with the agent app and target page both open in tabs. Use local (`localhost:3000` / `localhost:5001`) if the Vercel dashboard steps aren't done yet — functionally identical, and simpler to narrate without a network round-trip. Screen-record at 1080p, cursor visible.
+Written to be said out loud, casually — like you're explaining it to a friend, not reading a report. Contractions are fine. Don't worry about hitting every word exactly; hit the beats.
 
----
-
-**[0:00–0:25] Cold open — what this is**
-
-> "This is a change detection agent for the Indegene assignment. You give it a URL, it visits the page, and on the next run it tells you what changed — separating real content changes from CSS or formatting noise, and explaining why each change might matter. Let me show you."
-
-*(Cut to target page — Lumeno, a fictional B2B SaaS pricing page.)*
-
-> "This is the page it's monitoring — a product page I built for this, with a hero, features, pricing, and testimonials section."
+Have both tabs open before you hit record: the target page (Lumeno) and the agent app. Local or live URLs both work — live is simpler since there's nothing to start up.
 
 ---
 
-**[0:25–1:00] First run — baseline**
+**[0:00–0:20] Intro**
 
-*(Cut to agent app. Paste in the URL. Hit Run.)*
-
-> "First run — there's nothing to compare against yet, so watch what it does instead of just failing."
-
-*(Let the live status feed play out: visiting, reading, parsing sections, "no prior snapshot — establishing baseline.")*
-
-> "It reads the page, breaks it into six logical sections — not raw HTML, actual sections — and since there's no history for this URL yet, it says so explicitly and stores this as the baseline. That's the first decision point: it doesn't assume, it checks."
+> "Hey, so this is my submission for the Indegene assignment — a change detection agent. Basically, you give it a webpage, and it watches that page for you. Next time you check, it tells you exactly what changed, and whether that change actually matters or if it's just cosmetic. Let me just show you how it works."
 
 ---
 
-**[1:00–2:00] Content change — the real signal**
+**[0:20–0:40] The page it's watching**
 
-*(Cut to code editor / target page HTML. Change the Growth plan price, $49 → $59. Save. Reload target page briefly to show it live.)*
+*(Switch to the target page tab.)*
 
-> "Now I'll make a real change — raising the Growth plan price by $10."
-
-*(Back to agent app. Run again. Let the feed play.)*
-
-> "Watch the feed: it re-reads the page, compares section by section, and most sections come back byte-identical — no LLM call spent on those. But pricing changed, so it hands that one to the model."
-
-*(Point to the structured report — pricing card, "content" badge, before/after with the diff highlighted, the one-line significance.)*
-
-> "Here's the report: before, after, and a one-line read on why it matters — a 20% price increase, flagged as something a human should actually look at."
+> "This is the page I built for it to monitor — a fake pricing page for a made-up product called Lumeno. Nothing fancy, just a normal page with a few sections — pricing, features, testimonials, that kind of thing."
 
 ---
 
-**[2:00–2:50] Functional-only change — the part that proves it's not just diffing text**
+**[0:40–1:15] First run**
 
-*(Cut to code editor. Add the inline style to the footer logo — no visible text change. Save.)*
+*(Switch to the agent app. Paste the URL. Click Run.)*
 
-> "Now a change that's purely cosmetic — a style tweak in the footer, no text difference at all."
+> "Now let's run the agent on it. First time it's ever seen this page, so watch what it does."
 
-*(Run again. Let the feed show the footer line specifically.)*
+*(Let the live feed play — should take a few seconds now that it's paced properly.)*
 
-> "This is the part I actually care about showing: it detects the markup changed, checks that the text is identical, and explicitly skips the LLM call — because there's nothing for a reader to notice. That's the 'functional vs. content' separation the brief asked for, and it's a real decision, not just a label."
-
-*(Point to the report — footer card, "functional" badge, muted styling.)*
+> "See that — it's actually telling you step by step what it's doing. Visiting the page, reading through it, breaking it into sections. And since it's the first time, it just says 'nothing to compare yet, saving this as my starting point.' It's not pretending to find a difference where there isn't one."
 
 ---
 
-**[2:50–3:30] Agent trail + reliability**
+**[1:15–2:15] Making a real change**
 
-*(Scroll down to the agent trail.)*
+*(Cut to code / or just say you're editing it. Show the price change live if possible, or just narrate it.)*
 
-> "Everything you just saw in the live feed is kept here, permanently, with the reasoning behind each step — not just what it did, but why."
+> "Okay, now let's actually change something. I'm bumping the price of this plan up by ten dollars."
 
-*(Optional — quick edge case: type a dead URL like `localhost:9999`, hit Run, show the clean error instead of a crash.)*
+*(Back to the agent app, click Run again.)*
 
-> "And if the URL is unreachable, redirects, or times out, it fails cleanly and says so — it doesn't hang or crash."
+> "And I run it again. Watch the feed — it's going through every section, and for the ones that didn't change, it just says 'unchanged, skipping' — it doesn't waste time or an AI call double-checking something that's identical. But this pricing section — it flags it."
 
----
+*(Point at the report.)*
 
-**[3:30–4:15] Architecture, fast**
-
-*(Voiceover only, or cut to README.md briefly.)*
-
-> "Quick architecture note: one request streams the whole run over Server-Sent Events — no job queue needed. The 'previous snapshot' lives in the browser, not a database, so the whole thing is a stateless pipeline: URL and prior snapshot in, report and new snapshot out. It's built on Next.js, deployed on Vercel, and the reasoning calls go through OpenRouter to Claude. All in that repo, with a README covering the setup and the tradeoffs I made under the time box."
+> "And here's the actual output — before, after, and this line here is the AI's own take on why it matters: basically saying, hey, this is a real price increase, that's worth someone's attention."
 
 ---
 
-**[4:15–4:45] Close**
+**[2:15–2:50] The part I actually care about — telling real changes from fake ones**
 
-> "That's it — trigger, live status, structured report, and a full trail, with the agent making real decisions at each step instead of just fetching a page and dumping a diff. Repo and README have the rest."
+> "Now here's the bit I think is the most important part of this whole build. I also made a change that's purely cosmetic — like a tiny style tweak, no actual text changed. Watch what happens."
 
-*(End screen or fade.)*
+*(Run again with the functional-only change live.)*
+
+> "See — it catches that something in the code changed, but it checks: is the actual text different? No. So it just labels it 'functional' and doesn't even bother asking the AI about it. That's the agent actually making a judgment call, not just diffing text blindly."
 
 ---
 
-### Shot checklist before recording
-- [ ] Target page and agent app both reachable (local or deployed — confirm which before recording)
-- [ ] Browser localStorage cleared for the target URL, so the first run is genuinely a baseline
-- [ ] Pricing edit and footer edit ready to make live during the recording (or pre-staged in two branches/files to swap in quickly)
-- [ ] Dead-URL edge case URL handy (`http://localhost:9999` or similar)
-- [ ] Timer visible or mentally paced — hard cap is 5:00
+**[2:50–3:15] The trail, quickly**
+
+*(Scroll to Agent Trail.)*
+
+> "And everything you just saw stays logged down here, with the reasoning behind each step — so it's not a black box, you can see exactly why it did what it did."
+
+---
+
+**[3:15–3:40] Quick wrap**
+
+> "Quick note on how it's built — it's a Next.js app, deployed on Vercel, and it uses Claude through OpenRouter for the reasoning part. Everything's on GitHub with a README that walks through the setup and the decisions I made. That's pretty much it — trigger, live feed, a proper report, and a full trail, with the agent actually thinking through each step instead of just fetching a page and dumping a diff on you. Thanks for watching."
+
+---
+
+### Before you record
+- [ ] Decide: local URLs or live Vercel URLs (live is one less thing to explain)
+- [ ] Have the price-change edit and the cosmetic-only edit ready to trigger quickly (don't fumble live — know exactly which line you're changing)
+- [ ] Clear/reset the snapshot for the URL beforehand so your first Run in the video is a genuine baseline
+- [ ] Keep an eye on time — this reads at about 3 minutes at a normal pace; if you're rushing to fit it in, it's too long, cut the wrap-up section short instead of speeding through the demo
