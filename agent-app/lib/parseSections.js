@@ -9,6 +9,22 @@ function slugify(str, fallback) {
   return s || fallback;
 }
 
+// Two sections with identical heading text (e.g. two "Overview" sections)
+// would otherwise slugify to the same id and silently collide — the second
+// one would overwrite the first when matched up for diffing. This keeps
+// every id unique by suffixing repeats deterministically.
+function dedupeId(id, seen) {
+  if (!seen.has(id)) {
+    seen.add(id);
+    return id;
+  }
+  let n = 2;
+  while (seen.has(`${id}-${n}`)) n += 1;
+  const unique = `${id}-${n}`;
+  seen.add(unique);
+  return unique;
+}
+
 /**
  * Parses raw HTML into a list of logical sections. Prefers semantic
  * <section>/<header>/<footer>/<nav> blocks (what a well-built page uses);
@@ -37,10 +53,12 @@ function parseSections(html) {
   });
 
   if (topLevelEls.length > 0) {
+    const seenIds = new Set();
     topLevelEls.forEach((el, i) => {
       const $el = $(el);
       const heading = $el.find("h1, h2, h3").first().text();
-      const id = $el.attr("id") || slugify(heading, `${el.tagName}-${i}`);
+      const rawId = $el.attr("id") || slugify(heading, `${el.tagName}-${i}`);
+      const id = dedupeId(rawId, seenIds);
       const tagLabel = el.tagName ? el.tagName.charAt(0).toUpperCase() + el.tagName.slice(1) : id;
       sections.push({
         id,
@@ -68,10 +86,11 @@ function parseSections(html) {
     ];
   }
 
+  const seenIds = new Set();
   headings.forEach((h, i) => {
     const $h = $(h);
     const title = normalizeText($h.text());
-    const id = slugify(title, `section-${i}`);
+    const id = dedupeId(slugify(title, `section-${i}`), seenIds);
     let text = title;
     let html = $.html($h);
     let node = $h.next();
