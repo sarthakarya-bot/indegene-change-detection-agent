@@ -37,6 +37,8 @@ That third step is the one worth calling out: the model is only invoked where ju
 
 **Live status feed and agent trail are the same event stream**, rendered twice: the feed shows the last few events with a "this is happening now" console treatment; the trail keeps the full list with the reasoning behind each step, and stays on screen after the run finishes.
 
+**The feed is paced, not raw.** The pipeline computes at full speed — several sections can be checked and skipped within a few milliseconds of each other. Shown at that raw speed, a human can't actually read what happened. A small queue in `api/run/route.js` reveals one event at a time with a minimum visible duration (~500ms) before the next one appears, and the currently-active line is visually highlighted. This only affects *when the UI shows* something that already happened — it never changes what the agent decided or how fast it actually ran.
+
 ## Architecture
 
 ```
