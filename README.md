@@ -34,5 +34,6 @@ Open http://localhost:3000, enter `http://localhost:5001`, hit Run. First run es
 
 1. **Content change** — Growth plan price raised from $49/seat/mo to $59/seat/mo (`target-page/index.html`, pricing section).
 2. **Functional-only change** — added an inline `letter-spacing` style to the footer logo; visible text unchanged (`target-page/index.html`, footer section).
+3. **Content change** — hero trust line updated from "240+" to "500+" commercial teams (`target-page/index.html`, hero section), made live for testing the agent's second-run diff behavior.
 
 Both are picked up correctly by the agent and classified as `content` and `functional` respectively — see `agent-app/README.md` for how that classification works.
